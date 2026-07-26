@@ -280,7 +280,8 @@ html.scroll-locked{ position:relative; overflow:hidden; height:100% }
 .service-panel{ position:relative; overflow:hidden; border-radius:2rem; min-height:32rem; height:78vh; max-height:46rem; display:flex; align-items:flex-end; color:#fff; cursor:pointer }
 @media (max-width:640px){ .service-panel{ height:auto; min-height:26rem } }
 .panel-img-wrap{ position:absolute; inset:-10% -4%; overflow:hidden }
-.panel-img{ width:100%; height:100%; object-fit:cover; transition:transform .9s var(--ease-premium) }
+.panel-img{ width:100%; height:100%; object-fit:cover; filter:grayscale(1) brightness(.9); transition:transform .9s var(--ease-premium), filter 1.4s var(--ease-premium) }
+.service-panel.active .panel-img{ filter:grayscale(0) brightness(1) }
 .panel-scrim{ position:absolute; inset:0; background:linear-gradient(to top, rgba(10,10,10,.92), rgba(10,10,10,.45) 45%, rgba(10,10,10,.15)) }
 .panel-body{ position:relative; z-index:2; display:flex; flex-direction:column; gap:1rem; padding:2rem; width:100%; }
 @media (min-width:640px){ .panel-body{ padding:3rem } }
@@ -665,7 +666,7 @@ form#req-form{ display:flex; flex-direction:column; gap:1rem }
       </div>
 
       <div class="service-panel rv rv-scale" data-delay="0" data-service="Intonaco, Rasatura e Pittura">
-        <div class="panel-img-wrap"><img class="panel-img" data-parallax="0.12" src="https://images.unsplash.com/photo-1717281234297-3def5ae3eee1?w=1800&q=75&auto=format&fit=crop" alt="Intonaco, rasatura e pittura"/></div>
+        <div class="panel-img-wrap"><img class="panel-img" data-parallax="0.12" src="https://images.unsplash.com/photo-1525909002-1b05e0c869d8?w=1800&q=75&auto=format&fit=crop" alt="Rulli e bande di colore vivo su una parete tinteggiata"/></div>
         <div class="panel-scrim"></div>
         <div class="panel-body">
           <div class="panel-top-row"><span class="panel-idx">03 / 04</span><span class="arrow-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="28" height="28"><path d="M7 17 17 7M8 7h9v9"/></svg></span></div>
@@ -1086,6 +1087,12 @@ function updateParallax(){
 }
 function parallaxLoop(){ updateParallax(); requestAnimationFrame(parallaxLoop); }
 requestAnimationFrame(parallaxLoop);
+
+/* ---------- service panels: black & white until scrolled into focus ---------- */
+const panelColorObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => entry.target.classList.toggle('active', entry.isIntersecting));
+}, { threshold: 0.55 });
+document.querySelectorAll('.service-panel').forEach(p => panelColorObserver.observe(p));
 
 /* ---------- nav overlay ---------- */
 const navOverlay = document.getElementById('nav-overlay');
